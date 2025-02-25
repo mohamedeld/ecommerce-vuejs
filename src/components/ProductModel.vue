@@ -61,7 +61,8 @@ const onSubmit = form.handleSubmit(async (values) => {
         if(index === 0){
           const url = useObjectUrl(file as Blob)
           if(url?.value){
-            mainImage.value.push(url?.value)
+            mainImage.value.push(url?.value);
+            form.setFieldValue('mainImage', mainImage.value[0])
           }
         }
       })
@@ -84,7 +85,8 @@ const onSubmit = form.handleSubmit(async (values) => {
       Array.from(files).forEach((file, index) => {
           const url = useObjectUrl(file as Blob)
           if(url?.value){
-            mainImage.value.push(url?.value)
+            subImages.value.push(url?.value)
+            form.setFieldValue('subImages', subImages.value)
           }
       })
     }
