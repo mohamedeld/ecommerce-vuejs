@@ -18,6 +18,18 @@ export const registerSchema = toTypedSchema(
     })
 )
 
+export const addProductSchema = toTypedSchema(
+  z.object({
+    name: z.string({message:'Name is required'}),
+    price:z.coerce.number({message:'Price is required'}),
+    description:z.string({message:'Description is required'}),
+    category:z.string({message:'Category is required'}),
+    mainImage:z.any({message:'image is required'}),
+    stock:z.coerce.number({message:'Stock is required'}),
+    subImages:z.array(z.any({message:'Images is required'}))
+  })
+)
+
 export const addCategorySchema = toTypedSchema(
     z.object({
         name:z.string()

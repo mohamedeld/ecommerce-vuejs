@@ -33,6 +33,7 @@ const storeCategory = defineStore('categoryStore',{
                 try{
                     const response = await instance.get(`/ecommerce/categories?page=${page}&limit=${limit}`);
                     if(response?.data?.success){
+                      resolve(response?.data?.data)
                         this.categoriesData = response?.data?.data;
                     }else{
                         reject(response?.data?.error?.message)
