@@ -27,6 +27,7 @@
     "vee-validate": "^4.15.0",
     "vue": "^3.5.13",
     "vue-global-loader": "^0.9.9",
+    "vue-icons-plus": "^0.1.8",
     "vue-router": "^4.5.0",
     "zod": "^3.24.2"
   },
