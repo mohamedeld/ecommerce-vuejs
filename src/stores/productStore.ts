@@ -48,6 +48,25 @@ const productStore = defineStore('productStore',{
           }
 
       })
+  },
+  deleteProduct(productId:string){
+    return new Promise(async (resolve,reject)=>{
+      try{
+        const response = await instance.delete(`/ecommerce/products/${productId}`);
+        if(response?.data?.success){
+          await this.getProducts(1,10);
+          resolve(response?.data?.data)
+        }else{
+            reject(response?.data?.error?.message)
+        }
+    }catch(error){
+        if (axios.isAxiosError(error) && error?.response) {
+            reject(error?.response?.data?.error || error?.message)
+          } else {
+            reject("An unexpected error occurred")
+          }
+    }
+    })
   }
   }
 })

@@ -65,6 +65,23 @@ const fetchAllProducts = async () => {
   }
 };
 
+const deleteProduct = async (id:string) => {
+  try {
+    displayLoader();
+    await storeProduct?.deleteProduct(id);
+  } catch (error) {
+    console.log(error);
+    toast({
+      title: "Error",
+      variant: "destructive",
+      description: error as string, // Ensure this is a string
+    });
+    return;
+  } finally {
+    destroyLoader();
+  }
+};
+
 onMounted(async () => {
   await fetchAllCategories();
   await fetchAllProducts();
@@ -127,7 +144,7 @@ watch(currentPage, async () => {
             <Button variant="secondary">
               <BsFillPencilFill class="w-4 h-4" />
             </Button>
-            <Button variant="destructive">
+            <Button variant="destructive" @click="deleteProduct(product?._id)">
               <BsFillTrash3Fill  class="w-4 h-4" />
             </Button>
           </div>
