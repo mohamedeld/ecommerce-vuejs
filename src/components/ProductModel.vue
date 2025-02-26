@@ -28,10 +28,12 @@ import { useToast } from "@/components/ui/toast/use-toast";
 import { Input } from "@/components/ui/input";
 import productModal from "@/composables/useProductModel.ts";
 import { useForm } from "vee-validate";
+import  productStore  from "@/stores/productStore";
 import FileUpolad from "@/components/FileUpload.vue"
 import { computed } from "vue";
 const { isOpen, onClose } = productModal();
 const store = storeCategory();
+const { createProduct } = productStore();
 const categories = computed(() => store.categoriesData.categories);
 const { toast } = useToast();
 const isSubmitting = ref(false);
@@ -43,7 +45,31 @@ const form = useForm({
 const onSubmit = form.handleSubmit(async (values) => {
   try {
     isSubmitting.value = true;
-    console.log(values);
+    // Ensure mainImage is always included
+    const formData = new FormData();
+          formData.append('name',values?.name);
+          formData.append('price', values?.price?.toString());
+          formData.append('description',values?.description);
+          formData.append('category',values?.category);
+          formData.append('stock',values?.stock?.toString());
+          formData.append('mainImage',values?.mainImage);
+          values?.subImages?.forEach((image)=>{
+            formData.append('subImages',image);
+          })
+    const res = await createProduct(formData);
+    if (res) {
+      toast({
+        title: "Success",
+        description: "Product created successfully",
+      });
+      onClose();
+    }else{
+      toast({
+        title: "Error",
+        variant: "destructive",
+        description: "Product not created",
+      });
+    }
   } catch (error) {
     toast({
       title: "Error",
@@ -62,7 +88,7 @@ const onSubmit = form.handleSubmit(async (values) => {
           const url = useObjectUrl(file as Blob)
           if(url?.value){
             mainImage.value.push(url?.value);
-            form.setFieldValue('mainImage', mainImage.value[0])
+            form.setFieldValue('mainImage',file);
           }
         }
       })
@@ -86,7 +112,7 @@ const onSubmit = form.handleSubmit(async (values) => {
           const url = useObjectUrl(file as Blob)
           if(url?.value){
             subImages.value.push(url?.value)
-            form.setFieldValue('subImages', subImages.value)
+            form.setFieldValue('subImages', [...(form.values.subImages || []), file])
           }
       })
     }
@@ -210,11 +236,11 @@ const onSubmit = form.handleSubmit(async (values) => {
       </div>
       <Button
         type="submit"
-        class="mt-5 w-full text-center"
+        class="mt-5 w-full text-center bg-black text-white rounded-lg py-3"
         variant="primary"
         :disabled="isSubmitting"
       >
-        {{ isSubmitting ? "Submitting..." : "Register" }}
+        {{ isSubmitting ? "Submitting..." : "Submit" }}
       </Button>
     </form>
   </Modal>
